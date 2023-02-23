@@ -1,15 +1,15 @@
 /* eslint-disable no-useless-constructor */
 import { FastifyReply, FastifyRequest } from 'fastify'
+import { ClientUseCase } from '../useCases/clientUseCase'
 import { handleError } from '../utils/errors'
+import { createClientSchema } from '../schemas/clientSchemas'
 import {
-  createClientSchema,
+  loginSchema,
+  findByIdSchema,
   findByCpfSchema,
   findByEmailSchema,
-  findByIdSchema,
   findByNameSchema,
-  loginSchema,
-} from '../schemas/clientSchemas'
-import { ClientUseCase } from '../useCases/clientUseCase'
+} from '../schemas/'
 
 export class ClientController {
   constructor(private useCase: ClientUseCase) {}

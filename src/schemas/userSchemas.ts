@@ -19,16 +19,3 @@ export const createUserSchema = z.object({
     .min(6, { message: 'A senha deve ter pelo menos 2 caracteres' })
     .max(50, { message: 'A senha deve ter no máximo 50 caracteres' }),
 })
-
-export const loginSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(6).max(50),
-})
-
-export const findByIdSchema = z.object({
-  id: z.string().uuid(),
-})
-
-export const findByEmailSchema = z.object({
-  email: z.string().email(),
-})

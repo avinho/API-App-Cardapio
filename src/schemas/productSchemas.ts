@@ -18,14 +18,6 @@ export const createProductSchema = z.object({
   category: z.string(),
 })
 
-export const findByIdSchema = z.object({
-  id: z.string().uuid(),
-})
-
-export const findByNameSchema = z.object({
-  name: z.string(),
-})
-
 export const findByCategorySchema = z.object({
   category: z.string(),
 })

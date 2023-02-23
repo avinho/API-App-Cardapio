@@ -1,13 +1,12 @@
 /* eslint-disable no-useless-constructor */
 import { FastifyReply, FastifyRequest } from 'fastify'
+import { ProductUseCase } from '../useCases/productUseCase'
 import { handleError } from '../utils/errors'
+import { findByIdSchema, findByNameSchema } from '../schemas/'
 import {
   createProductSchema,
   findByCategorySchema,
-  findByIdSchema,
-  findByNameSchema,
 } from '../schemas/productSchemas'
-import { ProductUseCase } from '../useCases/productUseCase'
 
 export class ProductController {
   constructor(private useCase: ProductUseCase) {}

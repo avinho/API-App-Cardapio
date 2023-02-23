@@ -1,14 +1,9 @@
 /* eslint-disable no-useless-constructor */
 import { FastifyReply, FastifyRequest } from 'fastify'
-import {
-  createUserSchema,
-  findByEmailSchema,
-  findByIdSchema,
-  loginSchema,
-} from '../schemas/userSchemas'
-import { handleError } from '../utils/errors'
 import { UserUseCase } from '../useCases/userUseCase'
-import { userController } from './index'
+import { createUserSchema } from '../schemas/userSchemas'
+import { loginSchema, findByIdSchema, findByEmailSchema } from '../schemas/'
+import { handleError } from '../utils/errors'
 
 class UserController {
   constructor(private useCase: UserUseCase) {}
@@ -16,7 +11,6 @@ class UserController {
   async signUp(req: FastifyRequest, res: FastifyReply) {
     try {
       const data = await createUserSchema.parseAsync(req.body)
-      console.log(userController)
       const user = await this.useCase.signUp(data)
 
       res.status(201).send(user)

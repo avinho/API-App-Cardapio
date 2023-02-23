@@ -66,24 +66,3 @@ export const createClientSchema = z.object({
   phone: z.string().min(10).max(11),
   orders: z.array(z.string()).optional(),
 })
-
-export const loginSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(6).max(15),
-})
-
-export const findByIdSchema = z.object({
-  id: z.string().uuid(),
-})
-
-export const findByNameSchema = z.object({
-  name: z.string(),
-})
-
-export const findByEmailSchema = z.object({
-  email: z.string().email(),
-})
-
-export const findByCpfSchema = z.object({
-  cpf: z.string(),
-})

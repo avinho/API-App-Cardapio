@@ -5,7 +5,3 @@ export const createOrderSchema = z.object({
   status: z.number(),
   orderItems: z.array(z.string()).optional(),
 })
-
-export const subSchema = z.object({
-  sub: z.string().uuid(),
-})

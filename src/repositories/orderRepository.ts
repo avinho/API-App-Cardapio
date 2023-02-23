@@ -16,8 +16,8 @@ class OrderRepository implements IOrderRepository {
     return prisma.order.findMany()
   }
 
-  async findById(id: string): Promise<Order> {
-    return prisma.order.findUniqueOrThrow({
+  async findById(id: string): Promise<Order | null> {
+    return prisma.order.findUnique({
       where: { id },
     })
   }

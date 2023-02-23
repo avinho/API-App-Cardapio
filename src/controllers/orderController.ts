@@ -1,8 +1,9 @@
 /* eslint-disable no-useless-constructor */
 import { FastifyReply, FastifyRequest } from 'fastify'
-import { handleError } from '../utils/errors'
-import { createOrderSchema, subSchema } from '../schemas/orderSchema'
 import { OrderUseCase } from '../useCases/orderUseCase'
+import { handleError } from '../utils/errors'
+import { createOrderSchema } from '../schemas/orderSchema'
+import { findByIdSchema, subSchema } from '../schemas/'
 
 export class OrderController {
   constructor(private useCase: OrderUseCase) {}
@@ -40,7 +41,10 @@ export class OrderController {
 
   async findById(req: FastifyRequest, res: FastifyReply) {
     try {
-      res.status(200).send()
+      const id = req.params as string
+
+      const product = await this.useCase.findById(id)
+      res.status(200).send(product)
     } catch (err) {
       handleError(err, res)
     }

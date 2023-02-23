@@ -14,7 +14,7 @@ export class OrderUseCase {
     return await this.orderRepository.findAll()
   }
 
-  async findById(id: string): Promise<Order> {
+  async findById(id: string): Promise<Order | null> {
     return await this.orderRepository.findById(id)
   }
 
