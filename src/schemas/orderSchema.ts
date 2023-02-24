@@ -5,3 +5,8 @@ export const createOrderSchema = z.object({
   status: z.number(),
   orderItems: z.array(z.string()).optional(),
 })
+
+export const addItemSchema = z.object({
+  productId: z.string(),
+  quantity: z.number(),
+})

@@ -12,16 +12,17 @@ import { ProductController } from './productController'
 import { OrderController } from './orderController'
 
 const userRepository = new UserRepository()
-const clientRepository = new ClientRepository()
-const productRepository = new ProductRepository()
-const orderRepository = new OrderRepository()
-
 const userUseCase = new UserUseCase(userRepository)
-const clientUseCase = new ClientUseCase(clientRepository)
-const productUseCase = new ProductUseCase(productRepository)
-const orderUseCase = new OrderUseCase(orderRepository)
-
 export const userController = new UserController(userUseCase)
+
+const clientRepository = new ClientRepository()
+const clientUseCase = new ClientUseCase(clientRepository)
 export const clientController = new ClientController(clientUseCase)
+
+const productRepository = new ProductRepository()
+const productUseCase = new ProductUseCase(productRepository)
 export const productController = new ProductController(productUseCase)
+
+const orderRepository = new OrderRepository()
+const orderUseCase = new OrderUseCase(orderRepository)
 export const orderController = new OrderController(orderUseCase)

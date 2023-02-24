@@ -31,7 +31,7 @@ class ClientUseCase {
     return await this.clientRepository.create(user)
   }
 
-  async login({ email, password }: ILogin): Promise<Object> {
+  async login({ email, password }: ILogin): Promise<string> {
     const client = await this.clientRepository.findByEmail(email)
 
     const passMatch = await compare(password, client.password)
@@ -47,7 +47,7 @@ class ClientUseCase {
         issuer: env.JWT_ISSUER,
       })
 
-      return { token }
+      return token
     } catch (error) {
       throw new Error('Error generating token')
     }
@@ -55,7 +55,7 @@ class ClientUseCase {
 
   async logout(token: string): Promise<Object> {
     blacklist.add(token)
-    return { message: 'Logout success' }
+    return { message: '✅ Logout success!' }
   }
 
   async findAll(): Promise<Client[]> {

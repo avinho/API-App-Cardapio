@@ -1,7 +1,8 @@
 /* eslint-disable no-useless-constructor */
-import { Order } from '@prisma/client'
+import { Order, OrderItems } from '@prisma/client'
 import { OrderDTO } from '../dto/orderDTO'
 import { IOrderRepository } from '../interfaces/IOrderRepository'
+// import { IOrder } from '../interfaces/IOrder'
 
 export class OrderUseCase {
   constructor(private orderRepository: IOrderRepository) {}
@@ -10,11 +11,21 @@ export class OrderUseCase {
     return await this.orderRepository.create(data)
   }
 
-  async findAll(): Promise<Order[]> {
+  async addItem(
+    orderId: string,
+    productId: string,
+    quantity: number,
+  ): Promise<OrderItems> {
+    const order = await this.orderRepository.findById(orderId)
+
+    return await this.orderRepository.addItem(order, productId, quantity)
+  }
+
+  async findAll(): Promise<any[]> {
     return await this.orderRepository.findAll()
   }
 
-  async findById(id: string): Promise<Order | null> {
+  async findById(id: string): Promise<Order> {
     return await this.orderRepository.findById(id)
   }
 

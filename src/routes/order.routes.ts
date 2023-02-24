@@ -15,6 +15,10 @@ export async function orderRoutes(app: FastifyInstance) {
     return await orderController.findById(req, res)
   })
 
+  app.put('/itens/:id', { preHandler: authUserMidlle }, async (req, res) => {
+    return await orderController.addItem(req, res)
+  })
+
   app.get(
     '/client/:clientId',
     { preHandler: authUserMidlle },

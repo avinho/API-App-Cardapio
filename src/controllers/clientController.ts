@@ -29,12 +29,12 @@ export class ClientController {
     try {
       const { email, password } = await loginSchema.parseAsync(req.body)
 
-      const product = await this.useCase.login({
+      const token = await this.useCase.login({
         email,
         password,
       })
 
-      return res.status(201).send(product)
+      return res.status(201).send(token)
     } catch (err) {
       handleError(err, res)
     }

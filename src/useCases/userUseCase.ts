@@ -60,8 +60,9 @@ class UserUseCase {
   /**
    * Logout a user
    */
-  async logout(token: string): Promise<void> {
+  async logout(token: string): Promise<Object> {
     blacklist.add(token)
+    return { message: '✅ Logout success!' }
   }
 
   /**

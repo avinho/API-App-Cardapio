@@ -1,5 +1,6 @@
-import { Order, PrismaClient } from '@prisma/client'
+import { Order, OrderItems, PrismaClient } from '@prisma/client'
 import { OrderDTO } from '../dto/orderDTO'
+import { IOrder } from '../interfaces/IOrder'
 
 import { IOrderRepository } from '../interfaces/IOrderRepository'
 
@@ -12,14 +13,78 @@ class OrderRepository implements IOrderRepository {
     })
   }
 
-  async findAll(): Promise<Order[]> {
-    return prisma.order.findMany()
+  async addItem(
+    order: Order,
+    productId: string,
+    quantity: number,
+  ): Promise<OrderItems> {
+    const product = await prisma.products.findUniqueOrThrow({
+      where: {
+        id: productId,
+      },
+    })
+
+    await prisma.order.update({
+      where: {
+        id: order.id,
+      },
+      data: {
+        priceTotal: {
+          increment: product.price * quantity,
+        },
+      },
+    })
+
+    const orderItem = await prisma.orderItems.create({
+      data: {
+        quantity,
+        productId,
+        orderId: order.id,
+        pricePerUnit: product.price,
+        priceTotal: product.price * quantity,
+        createdAt: new Date(),
+      },
+    })
+
+    return orderItem
   }
 
-  async findById(id: string): Promise<Order | null> {
-    return prisma.order.findUnique({
-      where: { id },
+  async findAll(): Promise<any> {
+    /*   const orders = await prisma.order.findMany()
+
+    const x = orders.map(async (order) => {
+      const orderItems = await prisma.orderItems.findMany({
+        where: {
+          orderId: order.id,
+        },
+      })
+
+      return {
+        ...order,
+        orderItems,
+      }
     })
+
+    console.log(x) */
+  }
+
+  async findById(id: string): Promise<IOrder> {
+    const order = await prisma.order.findUniqueOrThrow({
+      where: {
+        id,
+      },
+    })
+
+    const orderItems = await prisma.orderItems.findMany({
+      where: {
+        orderId: id,
+      },
+    })
+
+    return {
+      ...order,
+      orderItems,
+    }
   }
 
   async findByClientId(clientId: string): Promise<Order[]> {

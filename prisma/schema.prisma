@@ -39,20 +39,21 @@ model Client {
 }
 
 model Order {
-  id          String        @id @default(uuid())
+  id          String       @id @default(uuid())
   description String
-  client      Client        @relation(fields: [clientId], references: [id])
+  client      Client       @relation(fields: [clientId], references: [id])
   clientId    String
-  status      Int           @default(0)
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  finishedAt  DateTime?     @default(now())
-  Order_Items Order_Items[]
+  status      Int          @default(0)
+  priceTotal  Float?       @default(0)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  finishedAt  DateTime?    @default(now())
+  Order_Items OrderItems[]
 
   @@map("orders")
 }
 
-model Order_Items {
+model OrderItems {
   id           String    @id @default(uuid())
   order        Order     @relation(fields: [orderId], references: [id])
   orderId      String
@@ -64,19 +65,19 @@ model Order_Items {
   createdAt    DateTime  @default(now())
   finishedAt   DateTime?
 
-  @@map("order_items")
+  @@map("orderItems")
 }
 
 model Products {
-  id          String        @id @default(uuid())
-  name        String        @unique
+  id          String       @id @default(uuid())
+  name        String       @unique
   price       Float
   description String
   rating      Float
   category    String
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  Order_Items Order_Items[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  Order_Items OrderItems[]
 
   @@map("products")
 }
