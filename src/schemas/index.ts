@@ -10,10 +10,6 @@ export const findByIdSchema = z.object({
   itemId: z.string().uuid().optional(),
 })
 
-export const findByItemIdSchema = z.object({
-  itemId: z.string().uuid(),
-})
-
 export const findByNameSchema = z.object({
   name: z.string(),
 })

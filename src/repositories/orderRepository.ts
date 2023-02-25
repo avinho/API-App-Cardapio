@@ -121,6 +121,58 @@ class OrderRepository implements IOrderRepository {
     return updatedOrder
   }
 
+  async completeOrderItem(id: string): Promise<OrderItem> {
+    const orderItem = await prisma.orderItem.findUniqueOrThrow({
+      where: {
+        id,
+      },
+    })
+
+    const updatedOrderItem = await prisma.orderItem.update({
+      where: {
+        id: orderItem.id,
+      },
+      data: {
+        finishedAt: new Date(),
+        status: 2,
+      },
+    })
+
+    return updatedOrderItem
+  }
+
+  async completeOrder(id: string): Promise<Order> {
+    const order = await prisma.order.findFirstOrThrow({
+      where: { id },
+    })
+
+    const orderItems = await prisma.orderItem.findMany({
+      where: {
+        orderId: order.id,
+      },
+    })
+
+    const orderItemsNotFinished = orderItems.filter(
+      (item) => item.finishedAt === null,
+    )
+
+    if (orderItemsNotFinished.length > 0) {
+      throw new Error('Order not finished')
+    }
+
+    const updatedOrder = await prisma.order.update({
+      where: {
+        id: order.id,
+      },
+      data: {
+        status: 2,
+        finishedAt: new Date(),
+      },
+    })
+
+    return updatedOrder
+  }
+
   async findAll(): Promise<Order[]> {
     const orders = await prisma.order.findMany()
 

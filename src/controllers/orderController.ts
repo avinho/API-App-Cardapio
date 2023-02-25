@@ -2,8 +2,13 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { OrderUseCase } from '../useCases/orderUseCase'
 import { handleError } from '../utils/errors'
-import { addItemSchema, createOrderSchema } from '../schemas/orderSchema'
-import { findByIdSchema, findByItemIdSchema, subSchema } from '../schemas/'
+import {
+  addItemSchema,
+  createOrderSchema,
+  discountSchema,
+  findByItemIdSchema,
+} from '../schemas/orderSchema'
+import { findByIdSchema, subSchema } from '../schemas/'
 
 export class OrderController {
   constructor(private useCase: OrderUseCase) {}
@@ -55,9 +60,16 @@ export class OrderController {
     }
   }
 
+  // TODO - Melhorar a aplicação do desconto do pedido
   async discount(req: FastifyRequest, res: FastifyReply) {
     try {
-      res.status(200).send()
+      const { id } = await findByIdSchema.parseAsync(req.params) // Order id
+
+      const { discount } = await discountSchema.parseAsync(req.body) // Discount
+
+      const order = await this.useCase.discount(id, discount)
+
+      res.status(200).send(order)
     } catch (err) {
       handleError(err, res)
     }
@@ -96,6 +108,7 @@ export class OrderController {
     }
   }
 
+  // TODO - Implementar o update do pedido
   async update(req: FastifyRequest, res: FastifyReply) {
     try {
       res.status(200).send()
