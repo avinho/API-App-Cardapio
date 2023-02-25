@@ -14,10 +14,12 @@ class OrderRepository implements IOrderRepository {
   }
 
   async addItem(
-    order: Order,
+    orderId: string,
     productId: string,
     quantity: number,
   ): Promise<OrderItems> {
+    const order = await this.findById(orderId)
+
     const product = await prisma.products.findUniqueOrThrow({
       where: {
         id: productId,
@@ -49,23 +51,25 @@ class OrderRepository implements IOrderRepository {
     return orderItem
   }
 
-  async findAll(): Promise<any> {
-    /*   const orders = await prisma.order.findMany()
+  async findAll(): Promise<Order[]> {
+    const orders = await prisma.order.findMany()
 
-    const x = orders.map(async (order) => {
-      const orderItems = await prisma.orderItems.findMany({
-        where: {
-          orderId: order.id,
-        },
-      })
+    const ordersWithItems = await Promise.all(
+      orders.map(async (order) => {
+        const orderItems = await prisma.orderItems.findMany({
+          where: {
+            orderId: order.id,
+          },
+        })
 
-      return {
-        ...order,
-        orderItems,
-      }
-    })
+        return {
+          ...order,
+          orderItems,
+        }
+      }),
+    )
 
-    console.log(x) */
+    return ordersWithItems
   }
 
   async findById(id: string): Promise<IOrder> {
@@ -88,9 +92,26 @@ class OrderRepository implements IOrderRepository {
   }
 
   async findByClientId(clientId: string): Promise<Order[]> {
-    return prisma.order.findMany({
+    const orders = await prisma.order.findMany({
       where: { clientId },
     })
+
+    const ordersWithItems = await Promise.all(
+      orders.map(async (order) => {
+        const orderItems = await prisma.orderItems.findMany({
+          where: {
+            orderId: order.id,
+          },
+        })
+
+        return {
+          ...order,
+          orderItems,
+        }
+      }),
+    )
+
+    return ordersWithItems
   }
 
   async update(id: string, data: OrderDTO): Promise<Order> {

@@ -47,7 +47,7 @@ model Order {
   priceTotal  Float?       @default(0)
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
-  finishedAt  DateTime?    @default(now())
+  finishedAt  DateTime?
   Order_Items OrderItems[]
 
   @@map("orders")

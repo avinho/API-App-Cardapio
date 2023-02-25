@@ -5,9 +5,9 @@ export interface IOrder {
   description: string
   clientId: string
   status: number
-  priceTotal?: number
+  priceTotal: number | null | undefined
   createdAt: Date
   updatedAt: Date
-  finishedAt: Date | null
+  finishedAt?: Date | null
   orderItems?: OrderItems[]
 }

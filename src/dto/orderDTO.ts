@@ -3,6 +3,6 @@ export interface OrderDTO {
   description: string
   clientId: string
   status: number
-  priceTotal?: number
+  priceTotal?: number | null
   orderItems?: string[]
 }

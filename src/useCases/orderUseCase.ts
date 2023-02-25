@@ -2,7 +2,7 @@
 import { Order, OrderItems } from '@prisma/client'
 import { OrderDTO } from '../dto/orderDTO'
 import { IOrderRepository } from '../interfaces/IOrderRepository'
-// import { IOrder } from '../interfaces/IOrder'
+import { IOrder } from '../interfaces/IOrder'
 
 export class OrderUseCase {
   constructor(private orderRepository: IOrderRepository) {}
@@ -16,16 +16,14 @@ export class OrderUseCase {
     productId: string,
     quantity: number,
   ): Promise<OrderItems> {
-    const order = await this.orderRepository.findById(orderId)
-
-    return await this.orderRepository.addItem(order, productId, quantity)
+    return await this.orderRepository.addItem(orderId, productId, quantity)
   }
 
   async findAll(): Promise<any[]> {
     return await this.orderRepository.findAll()
   }
 
-  async findById(id: string): Promise<Order> {
+  async findById(id: string): Promise<IOrder> {
     return await this.orderRepository.findById(id)
   }
 
