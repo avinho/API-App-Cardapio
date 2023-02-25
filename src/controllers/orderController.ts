@@ -3,23 +3,23 @@ import { FastifyReply, FastifyRequest } from 'fastify'
 import { OrderUseCase } from '../useCases/orderUseCase'
 import { handleError } from '../utils/errors'
 import { addItemSchema, createOrderSchema } from '../schemas/orderSchema'
-import { findByIdSchema, subSchema } from '../schemas/'
+import { findByIdSchema, findByItemIdSchema, subSchema } from '../schemas/'
 
 export class OrderController {
   constructor(private useCase: OrderUseCase) {}
 
-  async create(req: FastifyRequest, res: FastifyReply) {
+  async createOrder(req: FastifyRequest, res: FastifyReply) {
     try {
-      const { sub } = await subSchema.parseAsync(req.user)
+      const { sub } = await subSchema.parseAsync(req.user) // Client id from token
 
-      const body = await createOrderSchema.parseAsync(req.body)
+      const body = await createOrderSchema.parseAsync(req.body) // Order data
 
       const data = {
         ...body,
         clientId: sub,
       }
 
-      const order = await this.useCase.create(data)
+      const order = await this.useCase.createOrder(data)
 
       return res.status(201).send(order)
     } catch (err) {
@@ -31,11 +31,33 @@ export class OrderController {
     try {
       const { id } = await findByIdSchema.parseAsync(req.params) // Order id
 
-      const { productId, quantity } = await addItemSchema.parseAsync(req.body) // Product id
+      const { productId, quantity } = await addItemSchema.parseAsync(req.body)
 
       const order = await this.useCase.addItem(id, productId, quantity)
 
-      return res.status(201).send(order)
+      return res.status(200).send(order)
+    } catch (err) {
+      handleError(err, res)
+    }
+  }
+
+  async removeItem(req: FastifyRequest, res: FastifyReply) {
+    try {
+      const { id } = await findByIdSchema.parseAsync(req.params) // Order id
+
+      const { itemId } = await findByItemIdSchema.parseAsync(req.body) // Item id
+
+      await this.useCase.removeItem(id, itemId)
+
+      return res.status(200).send({ message: '✅ Item removed!' })
+    } catch (err) {
+      handleError(err, res)
+    }
+  }
+
+  async discount(req: FastifyRequest, res: FastifyReply) {
+    try {
+      res.status(200).send()
     } catch (err) {
       handleError(err, res)
     }
@@ -82,9 +104,13 @@ export class OrderController {
     }
   }
 
-  async delete(req: FastifyRequest, res: FastifyReply) {
+  async deleteOrder(req: FastifyRequest, res: FastifyReply) {
     try {
-      res.status(200).send()
+      const { id } = await findByIdSchema.parseAsync(req.params) // Order id
+
+      await this.useCase.deleteOrder(id)
+
+      return res.status(200).send({ message: '✅ Order removed!' })
     } catch (err) {
       handleError(err, res)
     }

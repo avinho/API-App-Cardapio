@@ -7,6 +7,11 @@ export const loginSchema = z.object({
 
 export const findByIdSchema = z.object({
   id: z.string().uuid(),
+  itemId: z.string().uuid().optional(),
+})
+
+export const findByItemIdSchema = z.object({
+  itemId: z.string().uuid(),
 })
 
 export const findByNameSchema = z.object({

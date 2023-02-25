@@ -1,9 +1,7 @@
-import { PrismaClient, User } from '@prisma/client'
+import { prisma } from '../database'
+import { User } from '@prisma/client'
 import { UserDTO } from '../dto/userDTO'
-
 import { IUserRepository } from '../interfaces/IUserRepository'
-
-const prisma = new PrismaClient()
 
 class UserRepository implements IUserRepository {
   async create({ name, email, password }: UserDTO): Promise<User> {

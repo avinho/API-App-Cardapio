@@ -1,13 +1,12 @@
-import { Order, OrderItems, PrismaClient } from '@prisma/client'
+import { prisma } from '../database'
+import { Order, OrderItem } from '@prisma/client'
 import { OrderDTO } from '../dto/orderDTO'
 import { IOrder } from '../interfaces/IOrder'
 
 import { IOrderRepository } from '../interfaces/IOrderRepository'
 
-const prisma = new PrismaClient()
-
 class OrderRepository implements IOrderRepository {
-  async create(data: OrderDTO): Promise<Order> {
+  async createOrder(data: OrderDTO): Promise<Order> {
     return prisma.order.create({
       data,
     })
@@ -17,7 +16,7 @@ class OrderRepository implements IOrderRepository {
     orderId: string,
     productId: string,
     quantity: number,
-  ): Promise<OrderItems> {
+  ): Promise<OrderItem> {
     const order = await this.findById(orderId)
 
     const product = await prisma.products.findUniqueOrThrow({
@@ -26,29 +25,100 @@ class OrderRepository implements IOrderRepository {
       },
     })
 
+    const orderItems = await prisma.$transaction(async (prisma) => {
+      const item = await prisma.orderItem.create({
+        data: {
+          quantity,
+          productId,
+          orderId: order.id,
+          pricePerUnit: product.price,
+          priceTotal: product.price * quantity,
+        },
+      })
+
+      const orderItems = await prisma.orderItem.findMany({
+        where: {
+          orderId: order.id,
+        },
+      })
+
+      const priceTotal = orderItems.reduce(
+        (total, item) => total + item.priceTotal,
+        0,
+      )
+
+      await prisma.order.update({
+        where: {
+          id: order.id,
+        },
+        data: {
+          priceTotal,
+        },
+      })
+
+      return item
+    })
+
+    return orderItems
+  }
+
+  async removeItem(orderId: string, itemId: string): Promise<void> {
+    const order = await this.findById(orderId)
+
+    await prisma.orderItem.findUniqueOrThrow({
+      where: {
+        id: itemId,
+      },
+    })
+
+    await prisma.$transaction(async (prisma) => {
+      const deletedOrderItem = await prisma.orderItem.delete({
+        where: {
+          id: itemId,
+        },
+      })
+
+      return deletedOrderItem
+    })
+
+    const orderItems = await prisma.orderItem.findMany({
+      where: {
+        orderId: order.id,
+      },
+    })
+
+    const priceTotal = orderItems.reduce(
+      (total, item) => total + item.priceTotal,
+      0,
+    )
+
     await prisma.order.update({
       where: {
         id: order.id,
       },
       data: {
+        priceTotal,
+      },
+    })
+  }
+
+  async discount(id: string, discount: number): Promise<Order> {
+    const order = await prisma.order.findFirstOrThrow({
+      where: { id },
+    })
+
+    const updatedOrder = await prisma.order.update({
+      where: {
+        id: order.id,
+      },
+      data: {
         priceTotal: {
-          increment: product.price * quantity,
+          decrement: discount,
         },
       },
     })
 
-    const orderItem = await prisma.orderItems.create({
-      data: {
-        quantity,
-        productId,
-        orderId: order.id,
-        pricePerUnit: product.price,
-        priceTotal: product.price * quantity,
-        createdAt: new Date(),
-      },
-    })
-
-    return orderItem
+    return updatedOrder
   }
 
   async findAll(): Promise<Order[]> {
@@ -56,7 +126,7 @@ class OrderRepository implements IOrderRepository {
 
     const ordersWithItems = await Promise.all(
       orders.map(async (order) => {
-        const orderItems = await prisma.orderItems.findMany({
+        const orderItems = await prisma.orderItem.findMany({
           where: {
             orderId: order.id,
           },
@@ -79,7 +149,7 @@ class OrderRepository implements IOrderRepository {
       },
     })
 
-    const orderItems = await prisma.orderItems.findMany({
+    const orderItems = await prisma.orderItem.findMany({
       where: {
         orderId: id,
       },
@@ -98,7 +168,7 @@ class OrderRepository implements IOrderRepository {
 
     const ordersWithItems = await Promise.all(
       orders.map(async (order) => {
-        const orderItems = await prisma.orderItems.findMany({
+        const orderItems = await prisma.orderItem.findMany({
           where: {
             orderId: order.id,
           },
@@ -115,7 +185,9 @@ class OrderRepository implements IOrderRepository {
   }
 
   async update(id: string, data: OrderDTO): Promise<Order> {
-    await this.findById(id)
+    await prisma.order.findFirstOrThrow({
+      where: { id },
+    })
 
     return prisma.order.update({
       where: { id },
@@ -123,8 +195,10 @@ class OrderRepository implements IOrderRepository {
     })
   }
 
-  async delete(id: string): Promise<void> {
-    await this.findById(id)
+  async deleteOrder(id: string): Promise<void> {
+    await prisma.order.findFirstOrThrow({
+      where: { id },
+    })
 
     await prisma.order.delete({
       where: { id },

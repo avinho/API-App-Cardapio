@@ -1,9 +1,7 @@
-import { Client, PrismaClient } from '@prisma/client'
+import { prisma } from '../database'
+import { Client } from '@prisma/client'
 import { ClientDTO } from '../dto/clientDTO'
-
 import { IClientRepository } from '../interfaces/IClientRepository'
-
-const prisma = new PrismaClient()
 
 class ClientRepository implements IClientRepository {
   async create(data: ClientDTO): Promise<Client> {

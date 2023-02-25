@@ -1,5 +1,5 @@
 /* eslint-disable no-useless-constructor */
-import { Order, OrderItems } from '@prisma/client'
+import { Order, OrderItem } from '@prisma/client'
 import { OrderDTO } from '../dto/orderDTO'
 import { IOrderRepository } from '../interfaces/IOrderRepository'
 import { IOrder } from '../interfaces/IOrder'
@@ -7,16 +7,24 @@ import { IOrder } from '../interfaces/IOrder'
 export class OrderUseCase {
   constructor(private orderRepository: IOrderRepository) {}
 
-  async create(data: OrderDTO): Promise<Order> {
-    return await this.orderRepository.create(data)
+  async createOrder(data: OrderDTO): Promise<Order> {
+    return await this.orderRepository.createOrder(data)
   }
 
   async addItem(
     orderId: string,
     productId: string,
     quantity: number,
-  ): Promise<OrderItems> {
+  ): Promise<OrderItem> {
     return await this.orderRepository.addItem(orderId, productId, quantity)
+  }
+
+  async removeItem(orderId: string, itemId: string): Promise<void> {
+    return await this.orderRepository.removeItem(orderId, itemId)
+  }
+
+  async discount(orderId: string, discount: number): Promise<Order> {
+    return await this.orderRepository.discount(orderId, discount)
   }
 
   async findAll(): Promise<any[]> {
@@ -35,9 +43,7 @@ export class OrderUseCase {
     return await this.orderRepository.update(id, data)
   }
 
-  async delete(id: string): Promise<Object> {
-    await this.orderRepository.delete(id)
-
-    return { message: 'Order deleted' }
+  async deleteOrder(id: string): Promise<void> {
+    await this.orderRepository.deleteOrder(id)
   }
 }
