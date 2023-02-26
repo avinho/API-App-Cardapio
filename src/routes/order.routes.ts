@@ -1,6 +1,6 @@
 import { FastifyInstance } from 'fastify'
 import { authUserMidlle } from '../middlewares/authUserMiddle'
-import { orderController } from '../controllers'
+import { orderController } from '../containers/orderContainer'
 
 export async function orderRoutes(app: FastifyInstance) {
   app.post('/', { preHandler: authUserMidlle }, async (req, res) => {

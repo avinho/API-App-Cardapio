@@ -1,6 +1,6 @@
 import { FastifyInstance } from 'fastify'
 import { authUserMidlle } from '../middlewares/authUserMiddle'
-import { userController } from '../controllers'
+import { userController } from '../containers/userContainer'
 
 export async function userRoutes(app: FastifyInstance) {
   app.post('/signup', async (req, res) => {

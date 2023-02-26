@@ -1,6 +1,6 @@
 import { FastifyInstance } from 'fastify'
 import { authUserMidlle } from '../middlewares/authUserMiddle'
-import { clientController } from '../controllers'
+import { clientController } from '../containers/clientContainer'
 
 export async function clientRoutes(app: FastifyInstance) {
   app.get('/test', async (req, res) => {
