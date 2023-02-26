@@ -13,6 +13,12 @@ import { findByIdSchema, subSchema } from '../schemas/'
 export class OrderController {
   constructor(private useCase: OrderUseCase) {}
 
+  /**
+   * Cria um novo pedido associado a um determinado cliente.
+   * @param {Object} req - Requisição HTTP recebida pelo servidor
+   * @param {Object} res - Resposta HTTP a ser enviada pelo servidor
+   * @returns O novo pedido criado.
+   */
   async createOrder(req: FastifyRequest, res: FastifyReply) {
     try {
       const { sub } = await subSchema.parseAsync(req.user) // Client id from token
@@ -32,6 +38,12 @@ export class OrderController {
     }
   }
 
+  /**
+   * Adiciona um novo item a um pedido existente.
+   * @param {Object} req - Requisição HTTP recebida pelo servidor
+   * @param {Object} res - Resposta HTTP a ser enviada pelo servidor
+   * @returns O pedido atualizado com o novo item.
+   */
   async addItem(req: FastifyRequest, res: FastifyReply) {
     try {
       const { id } = await findByIdSchema.parseAsync(req.params) // Order id
@@ -46,6 +58,12 @@ export class OrderController {
     }
   }
 
+  /**
+   * Remove um item de um pedido existente.
+   * @param {Object} req - Requisição HTTP recebida pelo servidor
+   * @param {Object} res - Resposta HTTP a ser enviada pelo servidor
+   * @returns uma mensagem de confirmação indicando que o item foi removido com sucesso.
+   */
   async removeItem(req: FastifyRequest, res: FastifyReply) {
     try {
       const { id } = await findByIdSchema.parseAsync(req.params) // Order id
@@ -61,6 +79,12 @@ export class OrderController {
   }
 
   // TODO - Melhorar a aplicação do desconto do pedido
+  /**
+   * Aplica um desconto em um pedido existente.
+   * @param {Object} req - Requisição HTTP recebida pelo servidor
+   * @param {Object} res - Resposta HTTP a ser enviada pelo servidor
+   * @returns O pedido atualizado com o desconto aplicado.
+   */
   async discount(req: FastifyRequest, res: FastifyReply) {
     try {
       const { id } = await findByIdSchema.parseAsync(req.params) // Order id
@@ -75,6 +99,12 @@ export class OrderController {
     }
   }
 
+  /**
+   * Busca todas as ordens
+   * @param {Object} req - Requisição HTTP recebida pelo servidor
+   * @param {Object} res - Resposta HTTP a ser enviada pelo servidor
+   * @returns Retorna todos pedidos
+   */
   async findAll(req: FastifyRequest, res: FastifyReply) {
     try {
       const order = await this.useCase.findAll()
@@ -85,6 +115,12 @@ export class OrderController {
     }
   }
 
+  /**
+   * Busca uma ordem por id
+   * @param {Object} req - Requisição HTTP recebida pelo servidor
+   * @param {Object} res - Resposta HTTP a ser enviada pelo servidor
+   * @returns Retorna o pedido encontrado pelo id especificado na requisição
+   */
   async findById(req: FastifyRequest, res: FastifyReply) {
     try {
       const { id } = await findByIdSchema.parseAsync(req.params)
@@ -96,6 +132,12 @@ export class OrderController {
     }
   }
 
+  /**
+   * Busca todas as ordens de um determinado cliente
+   * @param {Object} req - Requisição HTTP recebida pelo servidor
+   * @param {Object} res - Resposta HTTP a ser enviada pelo servidor
+   * @returns Retorna todos os pedidos encontrados do cliente especificado na requisição
+   */
   async findByClientId(req: FastifyRequest, res: FastifyReply) {
     try {
       const { sub } = await subSchema.parseAsync(req.user)
@@ -109,6 +151,12 @@ export class OrderController {
   }
 
   // TODO - Implementar o update do pedido
+  /**
+   * Atualiza uma ordem existente
+   * @param {Object} req - Requisição HTTP recebida pelo servidor
+   * @param {Object} res - Resposta HTTP a ser enviada pelo servidor
+   * @returns Retorna a ordem atualizada
+   */
   async update(req: FastifyRequest, res: FastifyReply) {
     try {
       res.status(200).send()
@@ -117,6 +165,12 @@ export class OrderController {
     }
   }
 
+  /**
+   * Deleta uma ordem existente
+   * @param {Object} req - Requisição HTTP recebida pelo servidor
+   * @param {Object} res - Resposta HTTP a ser enviada pelo servidor
+   * @returns Retorna uma mensagem informando que a ordem foi removida com sucesso
+   */
   async deleteOrder(req: FastifyRequest, res: FastifyReply) {
     try {
       const { id } = await findByIdSchema.parseAsync(req.params) // Order id
