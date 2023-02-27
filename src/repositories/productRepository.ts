@@ -30,7 +30,7 @@ class ProductRepository implements IProductRepository {
 
   async findByName(name: string): Promise<Products[]> {
     return prisma.products.findMany({
-      where: { name: { contains: name } },
+      where: { name: { contains: name, mode: 'insensitive' } },
     })
   }
 

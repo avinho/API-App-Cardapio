@@ -15,11 +15,11 @@ export class ClientController {
   constructor(private readonly useCase: ClientUseCase) {}
   async signUp(req: FastifyRequest, res: FastifyReply) {
     try {
-      const data = await createClientSchema.parseAsync(req.body)
+      const body = await createClientSchema.parseAsync(req.body)
 
-      const product = await this.useCase.signUp(data)
+      const data = await this.useCase.signUp(body)
 
-      return res.status(201).send(product)
+      return res.status(201).send(data)
     } catch (err) {
       handleError(err, res)
     }
@@ -53,9 +53,9 @@ export class ClientController {
 
   async findAll(req: FastifyRequest, res: FastifyReply) {
     try {
-      const products = await this.useCase.findAll()
+      const clients = await this.useCase.findAll()
 
-      res.status(200).send(products)
+      res.status(200).send(clients)
     } catch (err) {
       handleError(err, res)
     }
@@ -65,9 +65,9 @@ export class ClientController {
     try {
       const { id } = await findByIdSchema.parseAsync(req.params)
 
-      const product = await this.useCase.findById(id)
+      const client = await this.useCase.findById(id)
 
-      res.status(200).send(product)
+      res.status(200).send(client)
     } catch (err) {
       handleError(err, res)
     }
@@ -77,9 +77,9 @@ export class ClientController {
     try {
       const { name } = await findByNameSchema.parseAsync(req.params)
 
-      const product = await this.useCase.findByName(name)
+      const clients = await this.useCase.findByName(name)
 
-      res.status(200).send(product)
+      res.status(200).send(clients)
     } catch (err) {
       handleError(err, res)
     }
@@ -115,7 +115,7 @@ export class ClientController {
       const { name, cpf, email, password, phone, birthday } =
         await createClientSchema.parseAsync(req.body)
 
-      const product = await this.useCase.update(id, {
+      const client = await this.useCase.update(id, {
         name,
         cpf,
         email,
@@ -124,7 +124,7 @@ export class ClientController {
         birthday,
       })
 
-      res.status(200).send(product)
+      res.status(200).send(client)
     } catch (err) {
       handleError(err, res)
     }
