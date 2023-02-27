@@ -6,7 +6,7 @@ import { loginSchema, findByIdSchema, findByEmailSchema } from '../schemas/'
 import { handleError } from '../utils/errors'
 
 class UserController {
-  constructor(private useCase: UserUseCase) {}
+  constructor(private readonly useCase: UserUseCase) {}
 
   async signUp(req: FastifyRequest, res: FastifyReply) {
     try {

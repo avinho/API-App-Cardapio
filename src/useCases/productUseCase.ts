@@ -4,7 +4,7 @@ import { Products } from '@prisma/client'
 import { IProductRepository } from '../interfaces/IProductRepository'
 
 class ProductUseCase {
-  constructor(private productRepository: IProductRepository) {}
+  constructor(private readonly productRepository: IProductRepository) {}
 
   async create(data: ProductDTO): Promise<Products> {
     return await this.productRepository.create(data)

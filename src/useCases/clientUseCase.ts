@@ -17,7 +17,7 @@ class ClientUseCase {
    * Cria uma instância da classe ClientUseCase
    * @param {clientRepository} clientRepository - Uma instância do repositório do cliente
    */
-  constructor(private clientRepository: IClientRepository) {}
+  constructor(private readonly clientRepository: IClientRepository) {}
 
   /**
    * Cria um novo cliente

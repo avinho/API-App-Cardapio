@@ -13,7 +13,7 @@ export class OrderUseCase {
    * Construtor da classe.
    * @param orderRepository Uma instância de OrderRepository, que será utilizada para interagir com o banco de dados.
    */
-  constructor(private orderRepository: IOrderRepository) {}
+  constructor(private readonly orderRepository: IOrderRepository) {}
 
   /**
    * Cria um novo pedido.

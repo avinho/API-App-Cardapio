@@ -9,7 +9,7 @@ import {
 } from '../schemas/productSchemas'
 
 export class ProductController {
-  constructor(private useCase: ProductUseCase) {}
+  constructor(private readonly useCase: ProductUseCase) {}
 
   async create(req: FastifyRequest, res: FastifyReply) {
     try {

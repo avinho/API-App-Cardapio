@@ -11,7 +11,7 @@ import {
 import { findByIdSchema, subSchema } from '../schemas/'
 
 export class OrderController {
-  constructor(private useCase: OrderUseCase) {}
+  constructor(private readonly useCase: OrderUseCase) {}
 
   /**
    * Cria um novo pedido associado a um determinado cliente.

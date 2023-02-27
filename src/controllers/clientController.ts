@@ -12,7 +12,7 @@ import {
 } from '../schemas/'
 
 export class ClientController {
-  constructor(private useCase: ClientUseCase) {}
+  constructor(private readonly useCase: ClientUseCase) {}
   async signUp(req: FastifyRequest, res: FastifyReply) {
     try {
       const data = await createClientSchema.parseAsync(req.body)
