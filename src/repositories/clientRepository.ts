@@ -36,7 +36,7 @@ class ClientRepository implements IClientRepository {
 
   async findByName(name: string): Promise<Client[]> {
     return prisma.client.findMany({
-      where: { name: { contains: name } },
+      where: { name: { contains: name, mode: 'insensitive' } },
     })
   }
 
