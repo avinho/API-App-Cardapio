@@ -6,12 +6,12 @@ import { IOrder } from '../interfaces/IOrder'
 
 /**
  * Classe que implementa a lógica de negócio relacionada a pedidos (orders).
- * Utiliza uma instância de IOrderRepository para interagir com o banco de dados.
+ * Utiliza uma instância de OrderRepository para interagir com o banco de dados.
  */
 export class OrderUseCase {
   /**
    * Construtor da classe.
-   * @param orderRepository Uma instância de IOrderRepository, que será utilizada para interagir com o banco de dados.
+   * @param orderRepository Uma instância de OrderRepository, que será utilizada para interagir com o banco de dados.
    */
   constructor(private orderRepository: IOrderRepository) {}
 
